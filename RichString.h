@@ -27,7 +27,7 @@ in the source distribution for its full text.
 #include <curses.h>
 #endif
 
-#ifdef HAVE_LIBNCURSESW
+#ifdef HAVE_NCURSESW
 #include <wctype.h>
 #endif
 
@@ -38,7 +38,7 @@ in the source distribution for its full text.
 #define RichString_beginAllocated(this) memset(&this, 0, sizeof(RichString)); (this).chptr = (this).chstr;
 #define RichString_end(this) RichString_prune(&(this));
 
-#ifdef HAVE_LIBNCURSESW
+#ifdef HAVE_NCURSESW
 #define RichString_printVal(this, y, x) mvadd_wchstr(y, x, (this).chptr)
 #define RichString_printoffnVal(this, y, x, off, n) mvadd_wchnstr(y, x, (this).chptr + off, n)
 #define RichString_getCharVal(this, i) ((this).chptr[i].chars[0] & 255)
@@ -67,7 +67,7 @@ typedef struct RichString_ {
 
 #define RichString_setLen(this, len) do{ if(len < RICHSTRING_MAXLEN && this->chlen < RICHSTRING_MAXLEN) { RichString_setChar(this,len,0); this->chlen=len; } else RichString_extendLen(this,len); }while(0)
 
-#ifdef HAVE_LIBNCURSESW
+#ifdef HAVE_NCURSESW
 
 extern void RichString_setAttrn(RichString* this, int attrs, int start, int finish);
 

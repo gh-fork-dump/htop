@@ -12,9 +12,9 @@ applications_DATA = htop.desktop
 pixmapdir = $(datadir)/pixmaps
 pixmap_DATA = htop.png
 
-AM_CFLAGS += -pedantic -Wall $(wextra_flag) -std=c99 -D_XOPEN_SOURCE_EXTENDED -DSYSCONFDIR=\"$(sysconfdir)\" -I"$(top_srcdir)/$(my_htop_platform)"
+AM_CFLAGS += -pedantic -Wall $(wextra_flag) -std=c99 -DSYSCONFDIR=\"$(sysconfdir)\" -I"$(top_srcdir)/$(my_htop_platform)"
 AM_LDFLAGS =
-AM_CPPFLAGS = -DNDEBUG
+AM_CPPFLAGS = -DNDEBUG @CURSES_CFLAGS@
 
 myhtopsources = AvailableMetersPanel.c CategoriesPanel.c CheckItem.c \
 ClockMeter.c ColorsPanel.c ColumnsPanel.c CPUMeter.c CRT.c MainPanel.c \
@@ -204,6 +204,7 @@ SUFFIXES = .h
 
 BUILT_SOURCES = $(myhtopheaders) $(myhtopplatheaders)
 htop_SOURCES  = $(myhtopheaders) $(myhtopplatheaders) $(myhtopsources) $(myhtopplatsources)
+htop_LDADD = @CURSES_LIBS@
 nodist_htop_SOURCES = config.h
 
 .PHONY: htop-headers clean-htop-headers

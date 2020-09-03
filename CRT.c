@@ -159,7 +159,7 @@ const char *CRT_treeStrAscii[TREE_STR_COUNT] = {
    "-", // TREE_STR_SHUT
 };
 
-#ifdef HAVE_LIBNCURSESW
+#ifdef HAVE_NCURSESW
 
 const char *CRT_treeStrUtf8[TREE_STR_COUNT] = {
    "\xe2\x94\x80", // TREE_STR_HORZ ─
@@ -732,7 +732,7 @@ void CRT_init(int delay, int colorScheme, bool allowUnicode) {
    /* initialize locale */
    setlocale(LC_CTYPE, "");
 
-#ifdef HAVE_LIBNCURSESW
+#ifdef HAVE_NCURSESW
    if (allowUnicode && strcmp(nl_langinfo(CODESET), "UTF-8") == 0)
       CRT_utf8 = true;
    else
@@ -742,7 +742,7 @@ void CRT_init(int delay, int colorScheme, bool allowUnicode) {
 #endif
 
    CRT_treeStr =
-#ifdef HAVE_LIBNCURSESW
+#ifdef HAVE_NURSESW
       CRT_utf8 ? CRT_treeStrUtf8 :
 #endif
       CRT_treeStrAscii;

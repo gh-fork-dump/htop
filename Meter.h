@@ -127,7 +127,7 @@ extern ListItem* Meter_toListItem(Meter* this, bool moving);
 
 /* ---------- GraphMeterMode ---------- */
 
-#ifdef HAVE_LIBNCURSESW
+#ifdef HAVE_NCURSESW
 
 #define PIXPERROW_UTF8 4
 #endif
@@ -136,7 +136,7 @@ extern ListItem* Meter_toListItem(Meter* this, bool moving);
 
 /* ---------- LEDMeterMode ---------- */
 
-#ifdef HAVE_LIBNCURSESW
+#ifdef HAVE_NCURSESW
 
 #endif
 

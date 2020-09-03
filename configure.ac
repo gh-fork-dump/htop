@@ -151,75 +151,14 @@ if test "x$enable_taskstats" = xyes; then
     AC_DEFINE(HAVE_TASKSTATS, 1, [Define if taskstats support enabled.])
 fi
 
-# HTOP_CHECK_SCRIPT(LIBNAME, FUNCTION, DEFINE, CONFIG_SCRIPT, ELSE_PART)
-m4_define([HTOP_CHECK_SCRIPT],
-[
-   if test ! -z "m4_toupper($HTOP_[$1]_CONFIG_SCRIPT)"; then
-      # to be used to set the path to ncurses*-config when cross-compiling
-      htop_config_script_libs=$(m4_toupper($HTOP_[$1]_CONFIG_SCRIPT) --libs 2> /dev/null)
-      htop_config_script_cflags=$(m4_toupper($HTOP_[$1]_CONFIG_SCRIPT) --cflags 2> /dev/null)
-   else
-      htop_config_script_libs=$([$4] --libs 2> /dev/null)
-      htop_config_script_cflags=$([$4] --cflags 2> /dev/null)
-   fi
-   htop_script_success=no
-   htop_save_LDFLAGS="$LDFLAGS"
-   htop_save_CFLAGS="$CFLAGS"
-   if test ! "x$htop_config_script_libs" = x; then
-      LDFLAGS="$htop_config_script_libs $LDFLAGS"
-      CFLAGS="$htop_config_script_cflags $CFLAGS"
-      AC_CHECK_LIB([$1], [$2], [
-         AC_DEFINE([$3], 1, [The library is present.])
-         LIBS="$htop_config_script_libs $LIBS "
-         htop_script_success=yes
-      ], [
-        CFLAGS="$htop_save_CFLAGS"
-      ])
-      LDFLAGS="$htop_save_LDFLAGS"
-   fi
-   if test "x$htop_script_success" = xno; then
-      [$5]
-   fi
-])
-
-# HTOP_CHECK_LIB(LIBNAME, FUNCTION, DEFINE, ELSE_PART)
-m4_define([HTOP_CHECK_LIB],
-[
-   AC_CHECK_LIB([$1], [$2], [
-      AC_DEFINE([$3], 1, [The library is present.])
-      LIBS="-l[$1] $LIBS "
-   ], [$4])
-])
-
 AC_ARG_ENABLE(unicode, [AS_HELP_STRING([--enable-unicode], [enable Unicode support])], ,enable_unicode="yes")
-if test "x$enable_unicode" = xyes; then
-   HTOP_CHECK_SCRIPT([ncursesw6], [addnwstr], [HAVE_LIBNCURSESW], "ncursesw6-config",
-    HTOP_CHECK_SCRIPT([ncursesw], [addnwstr], [HAVE_LIBNCURSESW], "ncursesw6-config",
-     HTOP_CHECK_SCRIPT([ncursesw], [addnwstr], [HAVE_LIBNCURSESW], "ncursesw5-config",
-      HTOP_CHECK_SCRIPT([ncurses], [addnwstr], [HAVE_LIBNCURSESW], "ncurses5-config",
-       HTOP_CHECK_LIB([ncursesw6], [addnwstr], [HAVE_LIBNCURSESW],
-        HTOP_CHECK_LIB([ncursesw], [addnwstr], [HAVE_LIBNCURSESW],
-         HTOP_CHECK_LIB([ncurses], [addnwstr], [HAVE_LIBNCURSESW],
-       missing_libraries="$missing_libraries libncursesw"
-       AC_MSG_ERROR([You may want to use --disable-unicode or install libncursesw.])
-   )))))))
-
-   AC_CHECK_HEADERS([ncursesw/curses.h],[:],
-      [AC_CHECK_HEADERS([ncurses/ncurses.h],[:],
-         [AC_CHECK_HEADERS([ncurses/curses.h],[:],
-            [AC_CHECK_HEADERS([ncurses.h],[:],[missing_headers="$missing_headers $ac_header"])])])])
-else
-   HTOP_CHECK_SCRIPT([ncurses6], [refresh], [HAVE_LIBNCURSES], "ncurses6-config",
-    HTOP_CHECK_SCRIPT([ncurses], [refresh], [HAVE_LIBNCURSES], "ncurses5-config",
-     HTOP_CHECK_LIB([ncurses6],  [refresh], [HAVE_LIBNCURSES],
-      HTOP_CHECK_LIB([ncurses],  [refresh], [HAVE_LIBNCURSES],
-      missing_libraries="$missing_libraries libncurses"
-   ))))
-
-   AC_CHECK_HEADERS([curses.h],[:],
-      [AC_CHECK_HEADERS([ncurses/curses.h],[:],
-         [AC_CHECK_HEADERS([ncurses/ncurses.h],[:],
-            [AC_CHECK_HEADERS([ncurses.h],[:],[missing_headers="$missing_headers $ac_header"])])])])
+AX_WITH_CURSES
+if test "x$ax_cv_curses" != xyes; then
+   missing_libraries="$missing_libraries libncurses"
+fi
+if test "x$enable_unicode" = xyes && test "x$ax_cv_curses" != xyes; then
+   missing_libraries="$missing_libraries libncursesw"
+	AC_MSG_ERROR([You may want to use --disable-unicode or install libncursesw.])
 fi
 
 if test "$my_htop_platform" = "freebsd"; then

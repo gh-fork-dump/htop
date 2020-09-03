@@ -138,7 +138,7 @@ extern void CRT_handleSIGSEGV(int sgn);
 
 extern const char *CRT_treeStrAscii[TREE_STR_COUNT];
 
-#ifdef HAVE_LIBNCURSESW
+#ifdef HAVE_NCURSESW
 
 extern const char *CRT_treeStrUtf8[TREE_STR_COUNT];
 

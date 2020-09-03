@@ -37,7 +37,6 @@ htop.1
 install-sh
 libtool
 ltmain.sh
-m4/
 missing
 scripts/MakeHeader.py
 stamp-h1
